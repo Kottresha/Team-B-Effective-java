@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import in.conceptarchitect.finance.BankAccount;
+import in.conceptarchitect.finance.Bank;
 
 public class BankAccountTests {
 
@@ -15,10 +16,12 @@ public class BankAccountTests {
 	double amount=20000;
 	
 	BankAccount account;
+	Bank acc;
 	
 	@Before
 	public void init() {
 		account =new BankAccount(1, "Vivek", password, amount);
+		acc=new Bank("sandeep",7);
 		System.out.println("@Before called");
 	}
 
@@ -53,6 +56,21 @@ public class BankAccountTests {
 		assertEquals(0, account.getBalance(),0.001);
 	}
 	
-	
+	@Test
+	public void depositShouldFailForInvalidValue() {
+		boolean result =account.deposit(100);
+		assertEquals(true,result);
+		
+	}
+	@Test
+	public void depositShoudFailForInvalidAccount() {
+		boolean result = acc.deposit(123, 1000);
+		assertEquals(false,result);
+	}
+	@Test
+	public void depositShoudFailForInvalidAccountAndInvalidAmount() {
+		boolean result = acc.deposit(-123, -1000);
+		assertEquals(false,result);
+	}
 	
 }
