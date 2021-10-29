@@ -72,5 +72,55 @@ public class BankAccountTests {
 		boolean result = acc.deposit(-123, -1000);
 		assertEquals(false,result);
 	}
+	@Test
+    public void transferShouldFailForInvalidfromaccount() {
+
+	       boolean result=account.transfer(0, password);
+               assertEquals(false, result);
+    }
+
+    @Test
+    public void transferShouldFailForInvalidtoaccount() {
+
+	       boolean result=account.transfer(-1, password);
+	       assertEquals(false, result);
+     }
+
+     @Test  
+     public void transferShouldFailForInvalidPassword() {
 	
+	        boolean result=account.transfer(1, "wrong-password");
+	        assertFalse(result);
+     }
+
+     @Test  
+     public void transferShouldFailForInvalidAmount() {
+	
+	        boolean result=account.transfer(0, password);
+	        assertEquals(false,result);
+     }
+ 
+     @Test 
+     public void transferShouldFailForExcessAmount() {
+
+		   boolean result=account.transfer(amount+1, password);
+                   assertEquals(false,result);
+    }
+
+    @Test 
+    public void transferShouldPassForAccountHavingValidAmountAndPassword() {
+              int accountNumber=1;
+              
+              double amount=20000;
+
+              String password="password";
+
+              BankAccount account=new BankAccount(1,"Vivek",password, amount); 
+
+              boolean result=account.withdraw(accountNumber,amount, password);
+             
+              assertTrue(result);
+              assertEquals(0, account.getBalance(),0.001);
+       
+     }
 }
