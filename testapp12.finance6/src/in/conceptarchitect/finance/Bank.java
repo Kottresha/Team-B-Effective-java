@@ -12,8 +12,8 @@ public class Bank {
 		
 		return hashValue; 
 	}
-	public static void setAccountNumber(int  AccountNumber) {
-		Bank.AccountNumber = AccountNumber;
+	public static void setAccountNumber() {
+		Bank.AccountNumber = getAccountNumber();
 	}
 
 		
