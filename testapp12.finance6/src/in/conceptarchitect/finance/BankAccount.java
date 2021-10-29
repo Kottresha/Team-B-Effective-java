@@ -1,7 +1,5 @@
 package in.conceptarchitect.finance;
 
-import java.util.Scanner;
-
 public class BankAccount {
 	
 	int accountNumber;
@@ -10,11 +8,11 @@ public class BankAccount {
 	double balance;
 	static double interestRate = 10;
 	
-	public static double getInterestRate() {
+	public final static double getInterestRate() {
 		return interestRate;
 	}
 
-	public static void setInterestRate(double interestRate) {
+	public void setInterestRate(double interestRate) {
 		
 		BankAccount.interestRate = interestRate;
 	}
@@ -29,51 +27,37 @@ public class BankAccount {
 		
 	}
 	
-	
-	
-	public int getAccountNumber() {
-		return accountNumber;
+	public BankAccount() {
+		// TODO Auto-generated constructor stub
 	}
 
-	//account number can't be changed
-	//public void setAccountNumber(int accountNumber) {this.accountNumber = accountNumber;}
-	
-	
+	public final int getAccountNumber() {
+		return accountNumber;
+	}	
 
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public final void setName(String name) {
 		this.name = name;
 	}
-
 	
-	public double getBalance() {
+	public final double getBalance() {
 		return balance;
 	}
-
 	
-	
-	
-
-	//should there be a getPassword and setPassword
-	
-//	public String getPassword() {
-//		return password;
-//	}
-	
-	public boolean authenticate(String password) {
+	public final boolean authenticate(String password) {
 		return this.password.equals(salt(password));
 	}
 
-	void setPassword(String password) {
+	final void setPassword(String password) {
 		
 		this.password = salt(password);
 	}
 	
 	
-	public void changePassword(String oldPassword, String newPassword) {
+	public final void changePassword(String oldPassword, String newPassword) {
 		if(authenticate(oldPassword))
 			setPassword(newPassword);
 	}
@@ -81,7 +65,7 @@ public class BankAccount {
 
 	
 
-	private String salt(String password) {
+	private final String salt(String password) {
 		
 		String salted="";
 		
@@ -94,7 +78,7 @@ public class BankAccount {
 
 
 	
-	public void show() {
+	public final void show() {
 		System.out.println("account number\t"+accountNumber);
 		System.out.println("name         \t"+name);
 		System.out.println("password     \t"+password);
@@ -104,7 +88,7 @@ public class BankAccount {
 		
 	}
 
-	public boolean deposit(double amount) {
+	public final boolean deposit(double amount) {
 		// TODO Auto-generated method stub
 		if(amount>0) {
 			balance+=amount;
@@ -114,7 +98,7 @@ public class BankAccount {
 		}
 	}
 
-	public boolean withdraw(double amount, String password) {
+	public final boolean withdraw(double amount, String password) {
 		// TODO Auto-generated method stub
 		if(amount<=0)
 			return false;
@@ -132,11 +116,32 @@ public class BankAccount {
 	}
 	
 	
-	public void creditInterest(double interestRate) {
+	public boolean creditInterest(double interestRate) {
 		balance+=(balance*interestRate/1200);
+		return true;
 	}
 
+	public final boolean transferTo(double amount, String password2, BankAccount target) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+}
 
+class SavingsAccount{
+
+	@Override
+	public void setInterestRate(double interestRate) {
+		
+		BankAccount.interestRate = interestRate;
+	}
+}
+
+class CurrentAccount{
+	
+	
+	public boolean creditInterest(double interestRate) {
+		return false;
+	}
 }
 
 

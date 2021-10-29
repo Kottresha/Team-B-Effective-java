@@ -7,16 +7,16 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import in.conceptarchitect.finance.BankAccount;
 import in.conceptarchitect.finance.Bank;
+import in.conceptarchitect.finance.BankAccount;
 
 public class BankAccountTests {
 
 	String password="password";
 	double amount=20000;
 	
-	BankAccount account;
-	Bank acc;
+	BankAccount account = new BankAccount();
+	Bank acc = new Bank();
 	
 	@Before
 	public void init() {
@@ -58,8 +58,8 @@ public class BankAccountTests {
 	
 	@Test
 	public void depositShouldFailForInvalidValue() {
-		boolean result =account.deposit(100);
-		assertEquals(true,result);
+		boolean result =account.deposit(-100);
+		assertEquals(false,result);
 		
 	}
 	@Test

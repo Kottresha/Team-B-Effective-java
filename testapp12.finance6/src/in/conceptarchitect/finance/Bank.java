@@ -9,7 +9,6 @@ public class Bank {
 	public void creditInterst() {
 		//credit interest to all accounts
 		for(int i=1;i<=lastId;i++) {
-			
 			accounts[i].creditInterest(interestRate);
 		}
 	}
@@ -21,6 +20,10 @@ public class Bank {
 		this.interestRate = interestRate;
 	}
 	
+	public Bank() {
+		// TODO Auto-generated constructor stub
+	}
+
 	BankAccount [] accounts= new BankAccount[1000];
 	
 	public int openAccount(String name, String password, double amount) {
@@ -40,37 +43,29 @@ public class Bank {
 	public boolean deposit(int accountNumber, double amount) {
 		
 		BankAccount account = getAccountByNumber(accountNumber);
-		
 		return account.deposit(amount);
 	}
 
 	public boolean withdraw(int accountNumber,double amount,String password) {
-		BankAccount BA=getAccountByNumber(accountNumber);
 		
+		BankAccount BA=getAccountByNumber(accountNumber);
 		return BA.withdraw(amount, password);
 	}
 	
 	public boolean transferto(int accountNumber,double amount,String password,BankAccount target) {
+		
 		BankAccount BA=getAccountByNumber(accountNumber);	
-		
 		return BA.transferTo(amount, password, target);
-		
-		
 	}
+	
 	
 	public boolean closeAccount(int accountNumber) {
 		accountNumber=(Integer) null;
 		if(accountNumber==0) {
 			return true;
-		}else {
-		
-		return false;
-		
+		}
+		else {
+			return false;
+		}
 	}
-	}
-	
-	
-	
-	
-
 }
