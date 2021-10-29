@@ -5,6 +5,17 @@ public class Bank {
 	String name; //name of the bank
 	double interestRate;
 	int lastId=0;
+	 public static int  AccountNumber;
+	public static int getAccountNumber() {
+		BankAccount a = new BankAccount();
+		int hashValue =a.hashCode();
+		
+		return hashValue; 
+	}
+	public static void setAccountNumber(int  AccountNumber) {
+		Bank.AccountNumber = AccountNumber;
+	}
+
 		
 	public void creditInterst() {
 		//credit interest to all accounts
