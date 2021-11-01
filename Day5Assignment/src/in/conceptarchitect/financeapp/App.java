@@ -31,7 +31,7 @@ public class App {
 		}
 	}
 
-	private static void atmFunc(ATM atm) {
+	private static void atmFunc(ATM atm) throws InsufficientFundsException, InvalidAccountException, InvalidCredentialsException {
 		atm.start();
 	}
 
@@ -129,7 +129,8 @@ public class App {
 			case 0:
 				return;
 			case 8:
-				
+				accountNumber = read.nextInt();
+				icici.show(accountNumber);
 			}
 		}
 	}
