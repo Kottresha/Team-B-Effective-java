@@ -8,7 +8,6 @@ import in.conceptarchitect.exceptions.InsufficientFundsException;
 import in.conceptarchitect.exceptions.InvalidAccountException;
 import in.conceptarchitect.exceptions.InvalidCredentialsException;
 
-@SuppressWarnings("unused")
 public class  Bank {
 	
 	String name; //name of the Bank
@@ -127,11 +126,9 @@ public class  Bank {
 			throw new InsufficientFundsException("Account Can't be Closed, Clear Minus Balance..!");
 		}
 		
-<<<<<<< HEAD
 		//accounts[accountNumber]=null;
-=======
-		accounts[accountNumber] = null;
->>>>>>> 13dbd106e54cc0352f3c0eb7dec85ab6e383e8c8
+		int newcount=accounts.indexOf(accountNumber);
+		accounts.set(newcount, null);
 		accountCount--;
 		return true;
 	}
