@@ -7,6 +7,7 @@ import javax.security.auth.login.CredentialException;
 import in.conceptarchitect.exceptions.InsufficientFundsException;
 import in.conceptarchitect.exceptions.InvalidAccountException;
 import in.conceptarchitect.exceptions.InvalidCredentialsException;
+import in.conceptarchitect.exceptions.InvalidDenominationException;
 
 public class  Bank {
 	
@@ -26,9 +27,8 @@ public class  Bank {
 		this.interestRate = interestRate;
 	}
 	
-	public int openAccount(String name,String accountType, String password, double amount) {
+	public int openAccount(String name,String accountType, String password, double amount) throws InvalidDenominationException {
 		int accountNumber= ++ lastId;
-		System.out.println(accountType);
 		Account account= new Account(accountNumber, name, accountType, password,amount);
 		accounts.add(account); //store this account in the array.
 		accountCount++;
@@ -105,11 +105,8 @@ public class  Bank {
 			s.withdraw(amount, password);
 			t.deposit(amount);
 		}
-		catch(InsufficientFundsException ex) {
-			throw new InsufficientFundsException(ex);
-		}
-		catch(InvalidCredentialsException ex) {
-			throw new InvalidCredentialsException(ex);
+		finally {
+			
 		}
 	}
 
@@ -141,11 +138,8 @@ public class  Bank {
 		try {
 			account.withdraw(amount, password);
 		}
-		catch(InvalidCredentialsException ex) {
-			throw ex;
-		}
-		catch(InsufficientFundsException ex) {
-			throw new InsufficientFundsException(ex);
+		finally {
+			
 		}
 	}
 	
