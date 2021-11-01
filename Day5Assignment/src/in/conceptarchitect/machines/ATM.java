@@ -3,6 +3,7 @@ package in.conceptarchitect.machines;
 import in.conceptarchitect.exceptions.InsufficientFundsException;
 import in.conceptarchitect.exceptions.InvalidAccountException;
 import in.conceptarchitect.exceptions.InvalidCredentialsException;
+import in.conceptarchitect.exceptions.InvalidDenominationException;
 import in.conceptarchitect.finance.Bank;
 
 public class ATM {
@@ -17,7 +18,7 @@ public class ATM {
 		this.bank = bank;
 	}
 
-	public void start() throws InsufficientFundsException, InvalidAccountException, InvalidCredentialsException {
+	public void start() throws InsufficientFundsException, InvalidAccountException, InvalidCredentialsException, InvalidDenominationException {
 		
 		while(true) {
 			System.out.println("Welcome to "+bank.getName()+" bank");
@@ -30,7 +31,7 @@ public class ATM {
 		
 	}
 
-	private void adminMenu() {
+	private void adminMenu() throws InvalidDenominationException {
 		// TODO Auto-generated method stub
 		while(true) {
 			int choice= keyboard.readInt("1. Open Account 2. Credit Interest 3. Show Account 0. Exit :");
@@ -51,7 +52,7 @@ public class ATM {
 		bank.creditInterst();
 	}
 
-	private void doOpenAccount() {
+	private void doOpenAccount() throws InvalidDenominationException {
 		
 		String name=keyboard.readString("Name? ");
 		String accountType=keyboard.readString("accountType? ");

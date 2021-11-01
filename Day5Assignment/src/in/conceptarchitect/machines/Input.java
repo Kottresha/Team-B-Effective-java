@@ -24,5 +24,4 @@ public class Input {
 			return 0;
 		}
 	}
-
 }

@@ -2,6 +2,7 @@ package in.conceptarchitect.finance;
 
 import in.conceptarchitect.exceptions.InsufficientFundsException;
 import in.conceptarchitect.exceptions.InvalidCredentialsException;
+import in.conceptarchitect.exceptions.InvalidDenominationException;
 
 public class Account {
 	
@@ -12,7 +13,7 @@ public class Account {
 	double balance;
 	static double interestRate = 10;
 	
-	public Account(int accountNumber, String name, String accountType, String password, double amount) {
+	public Account(int accountNumber, String name, String accountType, String password, double amount) throws InvalidDenominationException {
 		
 		this.balance = amount; //this is optional here as there is a single balance in the context	
 		setName(name);
@@ -21,18 +22,22 @@ public class Account {
 		setAccountType(accountType);
 	}
 
-	public void setAccountType(String accountType) {
-		if(accountType.equals("Savings") || accountType == "savigs") {
+	public void setAccountType(String accountType) throws InvalidDenominationException {
+		switch(accountType) {
+		case "Savings":
+		case "savings":
 			this.accountType = "Savings";
-		}
-		else if(accountType == "Current" || accountType == "current") {
+			break;
+		case "Current":
+		case "current":
 			this.accountType = "Current";
-		}
-		else if(accountType == "Overdreaft" || accountType == "overdreaft") {
+			break;
+		case "overdreaft":
+		case "Overdreaft":
 			this.accountType = "Overdreaft";
-		}
-		else {
-			System.out.println("Wrong Account Type");
+			break;
+		default:
+			throw new InvalidDenominationException("Account Type Doesn't Exists..!");
 		}
 	}
 
@@ -109,7 +114,7 @@ public class Account {
 
 	public boolean withdraw(double amount, String password) throws InvalidCredentialsException, InsufficientFundsException {
 		// TODO Auto-generated method stub
-		if(amount<=0 && amount > balance) {
+		if(amount<1 || amount > balance) {
 			throw new InsufficientFundsException("Insufficient Amount..!");
 		}
 		if(!authenticate(password)) {
