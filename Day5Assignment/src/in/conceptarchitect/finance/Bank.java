@@ -1,5 +1,7 @@
 package in.conceptarchitect.finance;
 
+import java.util.ArrayList;
+
 import javax.security.auth.login.CredentialException;
 
 import in.conceptarchitect.exceptions.InsufficientFundsException;
@@ -14,8 +16,9 @@ public class  Bank {
 	double interestRate;
 	
 	
-	Account [] accounts= new Account[100]; //MAX 100. May not be great for large  s
-	
+	//Account [] accounts= new Account[100]; //MAX 100. May not be great for large  s
+	ArrayList <Account>  accounts= new ArrayList<Account>(); //MAX 100. May not be great for large  s
+
 	
 	public  Bank (String name, double interestRate) {
 		super();
@@ -27,7 +30,7 @@ public class  Bank {
 		int accountNumber= ++ lastId;
 		System.out.println(accountType);
 		Account account= new Account(accountNumber, name, accountType, password,amount);
-		accounts[accountNumber] = account; //store this account in the array.
+		accounts.add(account); //store this account in the array.
 		accountCount++;
 		return accountNumber;
 	}
@@ -43,7 +46,7 @@ public class  Bank {
 	public void creditInterst() {
 		//credit interest to all accounts
 		for(int i=1;i<=lastId; i++) {
-			accounts[i].creditInterest(interestRate);
+			accounts.get(i).creditInterest(interestRate);
 		}
 	}
 	
@@ -58,7 +61,7 @@ public class  Bank {
 	Account getAccountByNumber(int accountNumber) {
 		// TODO Auto-generated method stub
 		if(accountNumber> 0 && accountNumber<=lastId)
-			return accounts[accountNumber];
+			return accounts.get(accountNumber);
 		else
 			return null;
 	}
@@ -124,7 +127,7 @@ public class  Bank {
 			throw new InsufficientFundsException("Account Can't be Closed, Clear Minus Balance..!");
 		}
 		
-		accounts[accountNumber]=null;
+		//accounts[accountNumber]=null;
 		accountCount--;
 		return true;
 	}
