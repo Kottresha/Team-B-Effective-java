@@ -1,5 +1,8 @@
 package in.conceptarchitect.finance;
 
+import in.conceptarchitect.exceptions.InsufficientFundsException;
+import in.conceptarchitect.exceptions.InvalidCredentialsException;
+
 public class Account {
 	
 	int accountNumber;
@@ -66,12 +69,14 @@ public class Account {
 	}
 	
 	public void changePassword(String oldPassword, String newPassword) {
+		
 		if(authenticate(oldPassword))
 			setPassword(newPassword);
 	}
 	
 	public boolean authenticate(String password) {
 		return this.password.equals(salt(password));
+			
 	}
 	
 	private String salt(String password) {
@@ -102,10 +107,13 @@ public class Account {
 		}
 	}
 
-	public boolean withdraw(double amount, String password) {
+	public boolean withdraw(double amount, String password) throws InvalidCredentialsException, InsufficientFundsException {
 		// TODO Auto-generated method stub
-		if(amount<=0 && amount > balance && !authenticate(password)) {
-			return false;
+		if(amount<=0 && amount > balance) {
+			throw new InsufficientFundsException("Insufficient Amount..!");
+		}
+		if(!authenticate(password)) {
+			throw new InvalidCredentialsException("Wrong Password..!");
 		}
 		else {
 			

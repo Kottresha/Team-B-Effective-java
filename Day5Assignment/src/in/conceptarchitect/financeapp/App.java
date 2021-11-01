@@ -2,12 +2,15 @@ package in.conceptarchitect.financeapp;
 
 import java.util.Scanner;
 
+import in.conceptarchitect.exceptions.InsufficientFundsException;
+import in.conceptarchitect.exceptions.InvalidAccountException;
+import in.conceptarchitect.exceptions.InvalidCredentialsException;
 import in.conceptarchitect.finance.Bank;
 import in.conceptarchitect.machines.ATM;
 
 public class App {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InvalidCredentialsException, InsufficientFundsException, InvalidAccountException {
 		
 		Bank icici=new Bank("ICICI",12);
 		ATM atm=new ATM(icici);
@@ -32,7 +35,7 @@ public class App {
 		atm.start();
 	}
 
-	private static void bank(Scanner read, Bank icici) {
+	private static void bank(Scanner read, Bank icici) throws InvalidCredentialsException, InsufficientFundsException, InvalidAccountException {
 		String name, accountType, password;
 		int accountNumber;
 		double amount1;
@@ -58,23 +61,34 @@ public class App {
 				System.out.println("Interest Credited to all Accounts");
 			case 4:
 				accountNumber = read.nextInt();
-				
-				if(icici.deposit(accountNumber, read.nextDouble())){
+				amount1 = read.nextDouble(); 
+				try{
+					icici.deposit(accountNumber, amount1);
 					System.out.println("Amount Deposited");
 				}
-				else {
-					System.out.println("Verify Account Number and Amount Once");
+				catch(InvalidAccountException iae) {
+					System.out.println(iae);
+				}
+				catch(InsufficientFundsException ife) {
+					System.out.println(ife);
 				}
 				break;
 			case 5:
 				accountNumber = read.nextInt();
 				int amount = read.nextInt();
 				password = read.next();
-				if(icici.withdraw(accountNumber, amount, password)) {
+				try{
+					icici.withdraw(accountNumber, amount, password);
 					System.out.println("Collect Your Cash..!");
 				}
-				else {
-					System.out.println("Transaction Decilned..!");
+				catch(InvalidAccountException iae){
+					System.out.println(iae);
+				}
+				catch(InsufficientFundsException ife) {
+					System.out.println(ife);
+				}
+				catch(InvalidCredentialsException ice) {
+					System.out.println(ice);
 				}
 				break;
 			case 6:
@@ -82,21 +96,35 @@ public class App {
 				amount1 = read.nextDouble();
 				password = read.next();
 				int target = read.nextInt();
-				if(icici.transfer(source, amount1, password, target)) {
+				try{
+					icici.transfer(source, amount1, password, target);
 					System.out.println("Transaction Completed Successfully..!");
 				}
-				else {
-					System.out.println("Transaction Decilned..!");
+				catch(InvalidAccountException iae){
+					System.out.println(iae);
+				}
+				catch(InvalidCredentialsException ice) {
+					System.out.println(ice);
+				}
+				catch(InsufficientFundsException ife) {
+					System.out.println(ife);
 				}
 				break;
 			case 7:
 				accountNumber = read.nextInt();
 				password = read.next();
-				if(icici.closeAccount(accountNumber, password)){
+				try{
+					icici.closeAccount(accountNumber, password);
 					System.out.println("Account Closed");
 				}
-				else {
-					System.out.println("Account Doesn't Exists");
+				catch(InvalidAccountException iae) {
+					System.out.println(iae);
+				}
+				catch(InvalidCredentialsException ice){
+					System.out.println(ice);
+				}
+				catch(InsufficientFundsException ife) {
+					System.out.println(ife);
 				}
 			case 0:
 				return;

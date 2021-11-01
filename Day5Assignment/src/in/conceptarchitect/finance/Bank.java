@@ -1,5 +1,11 @@
 package in.conceptarchitect.finance;
 
+import javax.security.auth.login.CredentialException;
+
+import in.conceptarchitect.exceptions.InsufficientFundsException;
+import in.conceptarchitect.exceptions.InvalidAccountException;
+import in.conceptarchitect.exceptions.InvalidCredentialsException;
+
 public class  Bank {
 	
 	String name; //name of the Bank
@@ -57,53 +63,86 @@ public class  Bank {
 			return null;
 	}
 	
-	public boolean deposit(int accountNumber, double amount) {
+	public boolean deposit(int accountNumber, double amount) throws InsufficientFundsException, InvalidAccountException {
 		Account account = getAccountByNumber(accountNumber);
-		if(account==null)
-			return false;
-		
-		return account.deposit(amount);
+		if(account==null) {
+			throw new InvalidAccountException("Invalid Account Number");
+		}
+		else if(amount < 0) {
+			throw new InsufficientFundsException("Amount Can't be Deposited");
+		}
+		else {
+			return account.deposit(amount);
+		}
 	}
 
-	public double getAccountBalance(int accountNumber) {
+	public double getAccountBalance(int accountNumber) throws InsufficientFundsException, InvalidAccountException {
 		Account account=getAccountByNumber(accountNumber);
-		if(account==null)
-			return Double.NaN;
-		
-		return account.getBalance();
+		if(account==null) {
+			throw new InvalidAccountException("Invalid Account Number");
+		}
+		if(account.getBalance() > 0) {
+			return account.getBalance();
+		}
+		else {
+			throw new InsufficientFundsException("Insufficient Amount");
+		}
 	}
 
-	public boolean transfer(int source, double amount, String password, int target) {
+	public void transfer(int source, double amount, String password, int target) throws InvalidCredentialsException, InsufficientFundsException, InvalidAccountException {
 		// TODO Auto-generated method stub
 		 Account s = getAccountByNumber(source);
 		 Account t = getAccountByNumber(target);
-		if(s == null || t == null)
-			return false;
-		
-		if(s.withdraw(amount,password))
-			return t.deposit(amount);
-		else
-			return false;
-		
+		if(s == null) {
+			throw new InvalidAccountException("Invalid Transfer From Account Number");
+		}
+		if(t == null) {
+			throw new InvalidAccountException("Invalid Transfer To Account Number");
+		}
+		try {
+			s.withdraw(amount, password);
+			t.deposit(amount);
+		}
+		catch(InsufficientFundsException ex) {
+			throw new InsufficientFundsException(ex);
+		}
+		catch(InvalidCredentialsException ex) {
+			throw new InvalidCredentialsException(ex);
+		}
 	}
 
-	public boolean closeAccount(int accountNumber, String password) {
+	public boolean closeAccount(int accountNumber, String password) throws InsufficientFundsException, InvalidCredentialsException, InvalidAccountException {
 		
 		var account=getAccountByNumber(accountNumber);
-		if(account==null  || !account.authenticate(password) || account.getBalance()<0)
-			return false;
+		if(account==null) {
+			throw new InvalidAccountException("Invalid Account Number");
+		}
+		if(!account.authenticate(password)) {
+			throw new InvalidCredentialsException("Wrong Password");
+		}
+		if(account.getBalance()<0){
+			throw new InsufficientFundsException("Account Can't be Closed, Clear Minus Balance..!");
+		}
 		
 		accounts[accountNumber]=null;
-		
 		accountCount--;
 		return true;
 	}
 
-	public boolean withdraw(int accountNumber, int amount, String password) {
+	public void withdraw(int accountNumber, int amount, String password) throws InvalidCredentialsException, InsufficientFundsException, InvalidAccountException {
 		var account=getAccountByNumber(accountNumber);
-		if(account==null)
-			return false;
-		return account.withdraw(amount, password);
+		if(account==null) {
+			throw new InvalidAccountException("Invalid Account Number");
+		}
+		try {
+			account.withdraw(amount, password);
+		}
+		catch(InvalidCredentialsException ex) {
+			throw ex;
+		}
+		catch(InsufficientFundsException ex) {
+			throw new InsufficientFundsException(ex);
+		}
 	}
 	
 	public void show(int accountNumber) {
