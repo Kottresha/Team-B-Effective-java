@@ -18,7 +18,7 @@ public class  Bank {
 	
 	
 	//Account [] accounts= new Account[100]; //MAX 100. May not be great for large  s
-	ArrayList <Account>  accounts= new ArrayList<Account>(); //MAX 100. May not be great for large  s
+	ArrayList <Account>  accounts= new ArrayList<Account>(); 
 
 	
 	public  Bank (String name, double interestRate) {
