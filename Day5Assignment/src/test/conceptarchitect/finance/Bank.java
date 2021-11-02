@@ -2,11 +2,13 @@ package in.conceptarchitect.finance;
 
 import java.util.ArrayList;
 
+import javax.security.auth.login.CredentialException;
+
 import in.conceptarchitect.exceptions.InsufficientFundsException;
 import in.conceptarchitect.exceptions.InvalidAccountException;
 import in.conceptarchitect.exceptions.InvalidCredentialsException;
-import in.conceptarchitect.exceptions.InvalidDenominationException;
 
+@SuppressWarnings("unused")
 public class  Bank {
 	
 	String name; //name of the Bank
@@ -25,8 +27,9 @@ public class  Bank {
 		this.interestRate = interestRate;
 	}
 	
-	public int openAccount(String name,String accountType, String password, double amount) throws InvalidDenominationException {
+	public int openAccount(String name,String accountType, String password, double amount) {
 		int accountNumber= ++ lastId;
+		System.out.println(accountType);
 		Account account= new Account(accountNumber, name, accountType, password,amount);
 		accounts.add(account); //store this account in the array.
 		accountCount++;
@@ -103,8 +106,11 @@ public class  Bank {
 			s.withdraw(amount, password);
 			t.deposit(amount);
 		}
-		finally {
-			
+		catch(InsufficientFundsException ex) {
+			throw new InsufficientFundsException(ex);
+		}
+		catch(InvalidCredentialsException ex) {
+			throw new InvalidCredentialsException(ex);
 		}
 	}
 
@@ -120,7 +126,12 @@ public class  Bank {
 		if(account.getBalance()<0){
 			throw new InsufficientFundsException("Account Can't be Closed, Clear Minus Balance..!");
 		}
-		accounts.remove(accountNumber);
+		
+<<<<<<< HEAD
+		//accounts[accountNumber]=null;
+=======
+		accounts[accountNumber] = null;
+>>>>>>> 13dbd106e54cc0352f3c0eb7dec85ab6e383e8c8
 		accountCount--;
 		return true;
 	}
@@ -133,8 +144,11 @@ public class  Bank {
 		try {
 			account.withdraw(amount, password);
 		}
-		finally {
-			
+		catch(InvalidCredentialsException ex) {
+			throw ex;
+		}
+		catch(InsufficientFundsException ex) {
+			throw new InsufficientFundsException(ex);
 		}
 	}
 	

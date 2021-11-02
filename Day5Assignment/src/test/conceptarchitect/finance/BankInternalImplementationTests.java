@@ -11,6 +11,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import in.conceptarchitect.exceptions.InsufficientFundsException;
+import in.conceptarchitect.exceptions.InvalidAccountException;
 import in.conceptarchitect.finance.Bank;
 import in.conceptarchitect.finance.BankAccount;
 
@@ -107,7 +109,121 @@ public class BankInternalImplementationTests {
 		assertNotEquals(a2, newAccount);
 		
 	}
+
+        @Test
+	public void depositamountshouldFailForAnInvalidAmount() {
+		boolean result= bank.deposit(a1, -1);
+		assertFalse(result);
+		assertEquals(amount, bank.getAccountBalance(a1),0.01);
+	}
 	
+	@Test
+	public void deposit_shouldFailForInvalidAccountNumber() {
+	       boolean result=bank.deposit(1000, 1);
+	       assertFalse(result);		
+	}
+        
+        @Test
+	public void depositamountshouldWorkForAnValidAmountAndAccountNumber() {
+		
+	       boolean result = bank.deposit(a1, 1);
+	       assertEquals(true,result);
+	       assertEquals(amount+1, bank.getAccountBalance(a1),0.01);
+	}
+
+        @Test
+	public void withdrawamountShouldFailForInvalidAmount() {
+	
+		boolean result=account.withdraw(-1, password);		
+		assertEquals(false, result);
+	}
+	
+
+	@Test 
+        public void withdrawamountShouldFailForInvalidPassword() {
+		
+		boolean result=account.withdraw(1, "wrong-password");
+		assertFalse(result);
+	}
+	
+	
+	@Test 
+        public void withdrawamountShouldFailForExcessAmount() {
+		boolean result=account.withdraw(amount+1, password);
+		assertEquals(false,result);
+	}
+        
+        @Test
+	public void withdrawamountshouldWorkWithValidDetails() {
+		
+		boolean status = bank.transfer(a1,1,correctPassword,a2);
+		assertTransactionSuccess(status, a1, amount-1);		
+		assertTransactionSuccess(status, a2, amount+1);
+	}
+ 
+        @Test
+	public void transferamountshouldFailForInvalidAmount() {
+		boolean result= bank.transfer(a1, -1, correctPassword, a2);
+		assertTransactionFailed(result, a1);
+		assertTransactionFailed(result, a2);
+	}
+	
+	@Test
+	public void transferamountshouldFailForInvalidSourceAccountNumber() {
+		boolean result=bank.transfer(-1, 1, correctPassword, a2);
+		
+		assertTransactionFailed(result, a2);
+	}
+	
+	@Test
+	public void transferamountshouldFailForInvalidTargetAccountNumber() {
+		boolean result=bank.transfer(a1, 1, correctPassword, -1);
+		assertFalse(result);
+		
+	}
+	
+	@Test
+	public void transferamountshouldFailForInvalidPassword() {
+		var result= bank.transfer(a1, 1, "invalid-password", a2);
+		assertTransactionFailed(result, a1);
+		assertTransactionFailed(result, a2);
+		
+	}
+	
+	@Test
+	public void transferamountshouldFailForExcessAmount() {
+		var result=bank.transfer(a1, amount+1, correctPassword, a2);
+		assertTransactionFailed(result, a1);
+		assertTransactionFailed(result, a2);
+	}
+       
+        @Test 
+        public void transferamountShouldvalidForAccountHavingValidAmountAndPassword() {
+              int accountNumber=1;
+              
+              double amount=30000;
+
+              String password="password";
+
+              BankAccount account=new BankAccount(1,"Vivek",password, amount); 
+
+              boolean result=account.withdraw(accountNumber,amount, password);
+             
+              assertTrue(result);
+              assertEquals(0, account.getBalance(),0.001);
+       }
+
+       @Test
+       public void ShowBalanceFailForInvalidAccountNumber() {
+	       boolean result=bank.deposit(1000, 1);
+	       assertFalse(result);
+       }
+
+       @Test
+       public void ShowBalancePassForvalidAccountNumber() {
+	       boolean result=bank.deposit(1, 1);
+	       assertTrue(result);
+	}
 	
 	
 }
