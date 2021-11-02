@@ -124,8 +124,9 @@ public class  Bank {
 		}
 		
 		//accounts[accountNumber]=null;
-		int newcount=accounts.indexOf(accountNumber);
-		accounts.set(newcount, null);
+		//int newcount=accounts.indexOf(accountNumber);
+		//accounts.set(newcount, null);
+		accounts.remove(accountNumber);
 		accountCount--;
 		return true;
 	}
