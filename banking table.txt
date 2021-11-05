@@ -1,0 +1,32 @@
+Table 		| Columns
+Accounts	| accountNumber, accountType, BankId
+Savings		| accountNumber, password, accountType, accountHolderName, balance, interestRate
+Current		| accountNumber, password, accountType, accountHolderName, balance, interestRate
+ODT		| accountNumber, password, accountType, accountHolderName, balance, interestRate
+Transactions	| accountNumber, modeOfTransaction, amount, transactionTime
+Bank		| bankName, bankId, accountCount
+
+Accounts
+accountNumber primary key
+accountType forgein key
+BankId forgein key
+
+Savings
+accountNumber forgein key
+interestRate set default value as 10
+accountType set default value as "Savings"
+
+Current
+accountNumber forgein key
+interestRate set default value as 0
+accountType set default value as "Current"
+
+ODT
+accountNumber forgein key
+interestRate as mentioned in assignment
+accountType set default value as "ODT"
+
+Transaction
+accountNumber forgein key
+modeOfTransaction must be "Withdrawed" "Deposited" and "Transferred"
+amount data type decimal(8,2)
