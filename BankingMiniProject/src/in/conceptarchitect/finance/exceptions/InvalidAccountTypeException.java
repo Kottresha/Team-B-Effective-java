@@ -1,9 +1,9 @@
-package in.conceptarchitect.exceptions;
+package in.conceptarchitect.finance.exceptions;
 
-@SuppressWarnings("serial")
-public class InvalidAccountTypeException extends BankingExceptions {
+public class InvalidAccountTypeException extends BankingException {
 	
 	String accountType;
+	
 
 	public String getAccountType() {
 		return accountType;
@@ -35,4 +35,5 @@ public class InvalidAccountTypeException extends BankingExceptions {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub
 	}
+
 }

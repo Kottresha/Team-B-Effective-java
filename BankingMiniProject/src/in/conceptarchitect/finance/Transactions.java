@@ -1,5 +1,6 @@
 package in.conceptarchitect.finance;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class Transactions {
@@ -7,7 +8,22 @@ public class Transactions {
 	String mode,description;
 	int AccountNumber;
 	double amount;
-	LocalDate date = null;
+	
+	public Transactions() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Transactions(String mode, String description, int accountNumber, double amount, Date date) {
+		super();
+		this.mode = mode;
+		this.description = description;
+		AccountNumber = accountNumber;
+		this.amount = amount;
+		this.date = date;
+	}
+
+	Date date = null;
 	
 	public void setMode(String mode) {
 		this.mode = mode;
@@ -21,28 +37,46 @@ public class Transactions {
 		this.amount = amount;
 	}
 	
-	public void setDescription() {
-		switch(this.mode) {
-		case "Withdraw":
-		case "Deposited":
-			date = LocalDate.now();
-			this.description = mode + " " + amount + " on " + date;
-			break;
-		case "Transferred":
-			date = LocalDate.now();
-			this.description = mode + " " + amount + " to Account " + this.AccountNumber + " on " + date; 
-			break;
-		case "Received":
-			date = LocalDate.now();
-			this.description = mode + " " + amount + " from Account " + this.AccountNumber + " on " + date;
-		case "Interest":
-			date = LocalDate.now();
-			this.description = "Interest Credited on " + date;
-		}
+	public void setDescription(String description) {
+		this.description=description;
 	}
+
 	
-	public void setDescription(String message) {
-		date = LocalDate.now();
-		this.description = message + date;
+
+	@Override
+	public String toString() {
+		return "Transactions [mode=" + mode + ", description=" + description + ", AccountNumber=" + AccountNumber
+				+ ", amount=" + amount + ", date=" + date + "]";
 	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public String getMode() {
+		return mode;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public int getAccountNumber() {
+		return AccountNumber;
+	}
+
+
+	
+	
+
 }
+	
+

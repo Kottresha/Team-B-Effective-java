@@ -2,6 +2,7 @@ package in.conceptarchitect.machines;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.Date;
 
 public class Input {
 	
@@ -23,6 +24,19 @@ public class Input {
 		}catch(Exception ex) {
 			return 0;
 		}
+	}
+
+	public Date readDate(String prompt) {
+		// TODO Auto-generated method stub
+		try {
+//			System.out.print(prompt);
+			var response=readString(prompt);
+			return Date.valueOf(response);
+			
+			}catch(Exception ex) {
+				return readDate(null);
+			}
+		
 	}
 
 }

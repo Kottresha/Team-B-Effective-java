@@ -1,8 +1,7 @@
-package in.conceptarchitect.exceptions;
+package in.conceptarchitect.finance.exceptions;
 
-@SuppressWarnings("serial")
-public class InvalidDenominationException extends BankingExceptions {
-	
+public class InvalidDenominationException extends BankingException {
+
 	public InvalidDenominationException(int accountNumber) {
 		super(accountNumber,"Invalid Denominations");
 		// TODO Auto-generated constructor stub
@@ -28,4 +27,5 @@ public class InvalidDenominationException extends BankingExceptions {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub
 	}
+
 }

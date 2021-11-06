@@ -30,3 +30,10 @@ Transaction
 accountNumber forgein key
 modeOfTransaction must be "Withdrawed" "Deposited" and "Transferred"
 amount data type decimal(8,2)
+
+create table Transactions
+(Typeofaction varchar(15) ,
+description varchar(50),
+AccountNumber int ,
+Amount decimal(8,2),
+dateofTransaction date);

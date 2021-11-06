@@ -1,8 +1,7 @@
-package in.conceptarchitect.exceptions;
+package in.conceptarchitect.finance.exceptions;
 
-@SuppressWarnings("serial")
-public class InvalidCredentialsException extends BankingExceptions {
-	
+public class InvalidCredentialsException extends BankingException {
+
 	public InvalidCredentialsException(int accountNumber) {
 		super(accountNumber,"Invalid Credentials");
 		// TODO Auto-generated constructor stub
@@ -28,4 +27,5 @@ public class InvalidCredentialsException extends BankingExceptions {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub
 	}
+
 }

@@ -1,125 +1,192 @@
 package in.conceptarchitect.finance;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import in.conceptarchitect.exceptions.InvalidAccountException;
-import in.conceptarchitect.exceptions.InvalidAccountTypeException;
-import in.conceptarchitect.exceptions.InvalidCredentialsException;
+import in.conceptarchitect.finance.exceptions.InsufficientBalanceException;
+import in.conceptarchitect.finance.exceptions.InvalidAccountTypeException;
+import in.conceptarchitect.finance.storage.AccountStorage;
+import in.conceptarchitect.finance.storage.Processor;
 
 public class Bank {
 	
-	String bankName;
-	int bankId,lastId;
-	int accountCount = 0;
-	double interestRate = 10;
+	String name; //name of the bank
+	double interestRate;
 	
-	ArrayList<Accounts> account = new ArrayList<Accounts> ();
-
-	public Bank(int bankId, String bankName) {
-		this.bankId = bankId;
-		this.bankName = bankName;
-		lastId = this.bankId;
+	AccountStorage storage;
+	
+	
+	public Bank(AccountStorage storage,String name, double interestRate) {
+		super();
+		this.storage=storage;
+		setInterestRate(interestRate);
+		setName(name);
 	}
 	
-	public int openAccount(String name, String accountType, String password, double balance) {
-		Accounts a = null;
+	
+	public int openAccount(String accountType,String name, String password, double amount) {
+		
+		BankAccount account= null;
 		
 		switch(accountType.toLowerCase()) {
-		case "savings": 
-			a = new Savings(name, password, ++ this.lastId, balance);
-			break;
-		case "current":
-			a = new Current(name, password, ++ this.lastId, balance);
-			break;
-		case "overdraft":
-			a = new Overdraft(name,password, ++this.lastId, balance);
-			break;
-		default:
-			throw new InvalidAccountTypeException(accountType.toUpperCase());
+			case "savings": account=new SavingsAccount(0,name,password,amount); break;
+			case "current": account=new CurrentAccount(0,name,password,amount); break;
+			case "od": account=new OverdraftAccount(0, name, password, amount); break;
+			default: throw new InvalidAccountTypeException(accountType);
 		}
 		
-		account.add(a);
-		return lastId;
+		return storage.addAccount(account);
 	}
 
-	public void creditInterestRate() {
-		Iterator<Accounts> i = account.iterator();
-		while(i.hasNext()) {
-			i.next().creditInterest(this.interestRate);
-		}
-	}
-	
-	private Accounts findAccountByNumber(int accountNumber) {
-		if(accountNumber > 0 && accountNumber <= this.lastId) {
-			return account.get(accountNumber - this.bankId);
-		}
-		else {
-			throw new InvalidAccountException(accountNumber, "Account doesn't Exists");
-		}
-	}
-	
-	public void deposite(int accountNumber, double amount) {
-		Accounts a = this.findAccountByNumber(accountNumber);
-		a.deposit(amount);
-		Transactions t = new Transactions();
-		t.setAmount(amount);
-		t.setMode("Deposited");
-		t.setDescription();
-		a.transaction.add(t);
-		account.set(accountNumber, a);
-	}
-	
-	public void withdraw(int accountNumber, double amount, String password) {
-		Accounts a = findAccountByNumber(accountNumber);
-		a.withdraw(amount, password);
-		Transactions t = new Transactions();
-		t.setAmount(amount);
-		t.setMode("Withdraw");
-		t.setDescription();
-		a.transaction.add(t);
-		account.set(accountNumber, a);
-	}
-	
-	public void transferTo(int src, double amount, String password, int dest) {
-		
-		Accounts source = this.findAccountByNumber(src);
-		Accounts destination = this.findAccountByNumber(dest);
-		
-		destination.deposit(amount);
-		Transactions t = new Transactions();
-		t.setAccountNumber(src);
-		t.setAmount(amount);
-		t.setMode("Received");
-		destination.transaction.add(t);
-		account.set(accountCount, destination);
-		
-		source.withdraw(amount, password);
-		Transactions s = new Transactions();
-		s.setAccountNumber(dest);
-		s.setMode("Transferred");
-		s.setAmount(amount);
-		s.setDescription();
-		source.transaction.add(s);
-		account.set(accountCount, source);
-		
-	}
-	
-	public void changePassword(String old, String changed, String retype, int accountNumber) {
-		findAccountByNumber(accountNumber);
-		verify(changed, retype);
-		account.get(accountNumber).changePassword(old, changed);
-	}
-	
-	private void verify(String changed, String retype) {
+
+	public void closeAccount(int accountNumber, String password) {
 		// TODO Auto-generated method stub
-		if(!changed.equals(retype))
-			throw new InvalidCredentialsException(accountCount, "Wrong Password, Check new Password...");
+		var account=storage.getAccountByNumber(accountNumber);
+		
+		account.authenticate(password);
+			
+		if(account.getBalance()<0)
+			throw new InsufficientBalanceException(accountNumber, - account.getBalance());
+		
+		storage.removeAccount(account);
 		
 	}
-
-	public void closeAccount(int accountNumber) {
-		findAccountByNumber(accountNumber);
-		account.remove(accountNumber);
+	
+	public void deposit(int accountNumber, double amount) {
+		
+		BankAccount account = storage.getAccountByNumber(accountNumber);
+		
+		account.deposit(amount);
 	}
+
+	public void withdraw(int accountNumber, double amount, String password) {
+		// TODO Auto-generated method stub
+		var account=storage.getAccountByNumber(accountNumber);
+		
+		account.withdraw(amount, password);
+		
+	}		
+	
+	public double getAccountBalance(int accountNumber,String password) {
+		// TODO Auto-generated method stub
+		BankAccount account=storage.getAccountByNumber(accountNumber);
+		account.authenticate(password);
+		
+		//return balance only after validation
+		return account.getBalance();
+	}
+
+	public void transfer(int source, double amount, String password, int target) {
+		// TODO Auto-generated method stub
+		BankAccount t= storage.getAccountByNumber(target);
+		BankAccount s= storage.getAccountByNumber(source);
+		
+		
+		s.withdraw(amount,password);
+		t.deposit(amount);
+
+		
+	}
+		
+
+	class InterestCreditor implements Processor<BankAccount>{
+
+		@Override
+		public void process(BankAccount account) {
+			// TODO Auto-generated method stub
+			account.creditInterest(interestRate);
+		}
+		
+	}
+	
+	
+	public void creditInterst() {
+
+		storage.process(new InterestCreditor());
+	}
+	
+	
+//	public String getAccountList() {
+//		
+//		//final String report ="";
+//		final StringBuilder reportBuilder= new StringBuilder();
+//		
+//		storage.process(new Processor<BankAccount>() {
+//
+//			@Override
+//			public void process(BankAccount account) {
+//				// TODO Auto-generated method stub
+//				reportBuilder.append(account+"\n");
+//			}			
+//			
+//		});
+//		
+//		var report= reportBuilder.toString();
+//		
+//		return report;
+//	}
+	
+	
+	public String getAccountList() {
+		
+		//final String report ="";
+		final StringBuilder reportBuilder= new StringBuilder();
+	
+		//storage.process(account->reportBuilder.append(account));
+		
+		
+		storage.process(reportBuilder::append);
+			
+		var report= reportBuilder.toString();
+		
+		return report;
+	}
+	
+	public int getAccountCount() {
+		// TODO Auto-generated method stub
+		return storage.size();
+	}
+	
+	
+	
+	
+
+
+	public double getInterestRate() {
+		return interestRate;
+	}
+
+
+	public void setInterestRate(double interestRate) {
+		this.interestRate = interestRate;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 }

@@ -1,9 +1,9 @@
-package in.conceptarchitect.exceptions;
+package in.conceptarchitect.finance.exceptions;
 
-@SuppressWarnings("serial")
-public class InsufficientBalanceException extends BankingExceptions{
-
+public class InsufficientBalanceException extends BankingException {
+	
 	double deficit;
+	
 
 	public double getDeficit() {
 		return deficit;

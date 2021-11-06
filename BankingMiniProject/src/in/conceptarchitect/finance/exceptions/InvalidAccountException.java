@@ -1,8 +1,7 @@
-package in.conceptarchitect.exceptions;
+package in.conceptarchitect.finance.exceptions;
 
-@SuppressWarnings("serial")
-public class InvalidAccountException extends BankingExceptions {
-	
+public class InvalidAccountException extends BankingException {
+
 	public InvalidAccountException(int accountNumber) {
 		super(accountNumber,"Invalid Account Number");
 		// TODO Auto-generated constructor stub
