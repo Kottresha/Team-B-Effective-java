@@ -1,6 +1,6 @@
 package in.conceptarchitect.finance.storage;
 
-import in.conceptarchitect.finance.BankAccount;
+import in.conceptarchitect.finance.Accounts;
 import in.conceptarchitect.finance.exceptions.InvalidAccountException;
 
 public class ArrayAccountStorage implements AccountStorage  {
@@ -10,11 +10,11 @@ public class ArrayAccountStorage implements AccountStorage  {
 		int accountCount=0;
 		
 		
-		BankAccount [] accounts= new BankAccount[100]; //MAX 100. May not be great for large banks
+		Accounts [] accounts= new Accounts[100]; //MAX 100. May not be great for large banks
 
 		
 		@Override
-		public int addAccount(BankAccount account) {
+		public int addAccount(Accounts account) {
 			int accountNumber= ++ lastId;
 			account.setAccountNumber(accountNumber);
 			accounts[accountNumber] = account; //store this account in the array.
@@ -23,7 +23,7 @@ public class ArrayAccountStorage implements AccountStorage  {
 		}
 		
 		 @Override
-		public BankAccount getAccountByNumber(int accountNumber) {
+		public Accounts getAccountByNumber(int accountNumber) {
 				// TODO Auto-generated method stub
 				 
 				if(accountNumber<0 || accountNumber>lastId || accounts[accountNumber]==null)
@@ -35,7 +35,7 @@ public class ArrayAccountStorage implements AccountStorage  {
 			}
 		 
 		 @Override
-		public void removeAccount(BankAccount account) {
+		public void removeAccount(Accounts account) {
 			 accounts[account.getAccountNumber()]=null;
 			 accountCount--;
 		 }
@@ -48,13 +48,13 @@ public class ArrayAccountStorage implements AccountStorage  {
 		}
 		
 		@Override
-		public BankAccount[] getAllAccounts() {
+		public Accounts[] getAllAccounts() {
 			return accounts;
 		}
 	
 		
 		@Override //default method
-		public void process(Processor<BankAccount> accountProcessor) {
+		public void process(Processor<Accounts> accountProcessor) {
 		
 			if(!accountProcessor.initialize())
 				return ;

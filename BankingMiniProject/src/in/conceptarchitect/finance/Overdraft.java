@@ -1,19 +1,19 @@
 package in.conceptarchitect.finance;
 
+import in.conceptarchitect.Database.DatabaseConnection;
 
+public class Overdraft extends Accounts {
 
-import in.conceptarchitect.finance.exceptions.InsufficientBalanceException;
-
-public class OverdraftAccount extends BankAccount {
-
-	
 	double odLimit;
-	public OverdraftAccount(int accountNumber, String name, String password, double amount) {
-		super(accountNumber, name, password, amount);
-		// TODO Auto-generated constructor stub
+	
+	public Overdraft(String name, String password, int accountNumber, double balance) {
+		super(name, password, accountNumber, balance);
 		updateOdLimit();
+		
+		String sqlQuery = "write insert command ODT table";
+		DatabaseConnection.insertQuery(sqlQuery);
 	}
-
+	
 	private void updateOdLimit() {
 		// TODO Auto-generated method stub
 		if(odLimit<balance/10)
@@ -52,25 +52,5 @@ public class OverdraftAccount extends BankAccount {
 			balance-= (-balance*0.01);
 		}
 	}
-	
-	
-//	@Override
-//	public void withdraw(double amount, String password) {
-//		// TODO Auto-generated method stub
-//		validateDenomination(amount);
-//		authenticate(password);
-//		if(amount > getBalance() + getOdLimit())
-//			throw new InsufficientBalanceException(getAccountNumber(), amount- (getBalance()+getOdLimit()));
-//		
-//		balance-=amount;
-//		
-//		if(balance<0) {
-//			balance-= (-balance*0.01);
-//		}
-//	}
-	
-	
-	
-	
+
 }
-		

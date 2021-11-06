@@ -1,21 +1,21 @@
 package in.conceptarchitect.finance.storage;
 
-import in.conceptarchitect.finance.BankAccount;
+import in.conceptarchitect.finance.Accounts;
 
 //@FunctionalInterface
 public interface AccountStorage {
 
-	int addAccount(BankAccount account);
+	int addAccount(Accounts account);
 
-	BankAccount getAccountByNumber(int accountNumber);
+	Accounts getAccountByNumber(int accountNumber);
 
-	void removeAccount(BankAccount account);
+	void removeAccount(Accounts account);
 
 	int size();
 
-	BankAccount[] getAllAccounts();
+	Accounts[] getAllAccounts();
 	
-	default void process(Processor<BankAccount> accountProcessor) {
+	default void process(Processor<Accounts> accountProcessor) {
 		//if initialization fails do not process
 		if(!accountProcessor.initialize())
 			return;

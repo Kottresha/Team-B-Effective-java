@@ -1,17 +1,16 @@
 package in.conceptarchitect.finance.storage;
 
 import java.util.ArrayList;
-
-import in.conceptarchitect.finance.BankAccount;
+import in.conceptarchitect.finance.Accounts;
 import in.conceptarchitect.finance.exceptions.InvalidAccountException;
 
 public class ArrayListAccountStorage implements AccountStorage {
 	
-	ArrayList<BankAccount> accounts=new ArrayList<>();
+	ArrayList<Accounts> accounts=new ArrayList<>();
 	int lastId;
 
 	@Override
-	public int addAccount(BankAccount account) {
+	public int addAccount(Accounts account) {
 		// TODO Auto-generated method stub
 		int id=++lastId;
 		account.setAccountNumber(id);
@@ -20,7 +19,7 @@ public class ArrayListAccountStorage implements AccountStorage {
 	}
 
 	@Override
-	public BankAccount getAccountByNumber(int accountNumber) {
+	public Accounts getAccountByNumber(int accountNumber) {
 		// TODO Auto-generated method stub
 		for(var account : accounts)
 			if(account.getAccountNumber()==accountNumber)
@@ -30,7 +29,7 @@ public class ArrayListAccountStorage implements AccountStorage {
 	}
 
 	@Override
-	public void removeAccount(BankAccount account) {
+	public void removeAccount(Accounts account) {
 		// TODO Auto-generated method stub
 		accounts.remove(account);
 	}
@@ -42,9 +41,9 @@ public class ArrayListAccountStorage implements AccountStorage {
 	}
 
 	@Override
-	public BankAccount[] getAllAccounts() {
+	public Accounts[] getAllAccounts() {
 		// TODO Auto-generated method stub
-		BankAccount [] array=new BankAccount[size()];
+		Accounts [] array=new Accounts[size()];
 		
 		return accounts.toArray(array);
 	}

@@ -28,8 +28,6 @@ public class CurrentAccountSpecs {
 		assertTrue("SavingsAccount Not a type of BankAccount", account instanceof BankAccount);
 		
 	}
-
-	
 	
 	@Test
 	public void withdraw_shouldCanWithdrawUptoBalance() {

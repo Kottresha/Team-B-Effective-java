@@ -3,10 +3,8 @@ package in.conceptarchitect.machines;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-
-import database.DataBase;
 import in.conceptarchitect.finance.Bank;
-import in.conceptarchitect.finance.SavingsAccount;
+import in.conceptarchitect.finance.Savings;
 import in.conceptarchitect.finance.Transactions;
 import in.conceptarchitect.finance.exceptions.BankingException;
 import in.conceptarchitect.finance.exceptions.InsufficientBalanceException;
@@ -21,7 +19,6 @@ public class ATM {
 	Bank bank;
 	
 	Transactions t=new Transactions();
-	DataBase db=new DataBase();
 	
 	public ATM(Bank bank) {
 		super();
@@ -59,9 +56,9 @@ public class ATM {
 						doTransfer(); break;
 					case 4:
 						doShowBalance(); break;
-					case 5:
+					/*case 5:
 						doneTransactions(); break;
-					case 6:
+					*/case 6:
 						doCloseAccount(); return;
 					case 0:
 						return;
@@ -79,15 +76,15 @@ public class ATM {
 		
 	}
 	
-	private void doneTransactions() throws Exception {
+	/*private void doneTransactions() throws Exception {
 		// TODO Auto-generated method stub
-		List<Transactions> lu=db.getAllTransactions();
-		for(Transactions t1:lu) {
+		//List<Transactions> lu=db.getAllTransactions();
+		//for(Transactions t1:lu) {
 			System.out.println(t1);
 	
-		}
+		//}
 		
-	}
+	}*/
 
 	private void doWithdraw() throws Exception {
 		// TODO Auto-generated method stub
@@ -100,9 +97,9 @@ public class ATM {
 		t.setAmount(amount);
 		t.setAccountNumber(accountNumber);
 		
-		Date date=keyboard.readDate("enter date");
+		/*Date date=keyboard.readDate("enter date");
 		t.setDate(date);
-		db.insertTransactions(t);
+		db.insertTransactions(t);*/
 		
 		
 		//you reach here only if withdraw succeeds
@@ -139,13 +136,13 @@ public class ATM {
 		String password=keyboard.readString("password? ");
 		int targetAccount=keyboard.readInt("target account?");
 		t.setMode("transfer");
-		bank.transfer(accountNumber, amount, password, targetAccount);
+		bank.transferTo(accountNumber, amount, password, targetAccount);
 		t.setAccountNumber(accountNumber);
 		t.setDescription("transfered succesfully to");
 		t.setAmount(amount);
-		Date date=keyboard.readDate("enter date");
+		/*Date date=keyboard.readDate("enter date");
 		t.setDate(date);
-		db.insertTransactions(t);
+		db.insertTransactions(t);*/
 		printSlip("Amount Transferred");
 	}
 
@@ -154,12 +151,12 @@ public class ATM {
 
 		int amount=keyboard.readInt("amount to transfer? ");
 		t.setMode("Deposit");
-		bank.deposit(accountNumber, amount);
+		bank.deposite(accountNumber, amount);
 		t.setAccountNumber(accountNumber);
 		t.setAmount(amount);
-		Date date=keyboard.readDate("enter date");
+		/*Date date=keyboard.readDate("enter date");
 		t.setDate(date);
-		db.insertTransactions(t);
+		db.insertTransactions(t);*/
 		printSlip("Amount Deposited");
 		
 	}
@@ -177,7 +174,7 @@ public class ATM {
 			case 2:
 				doCreditInterest(); break;
 			case 3:
-				doShowAccount();break;
+				doCloseAccount();break;
 			
 			case 0:
 				return;
@@ -189,15 +186,15 @@ public class ATM {
 		}
 	}
 
-	private void doShowAccount() {
+	/*private void doShowAccount() {
 		// TODO Auto-generated method stub
 		var report= bank.getAccountList();
 		printMessage(report);
-	}
+	}*/
 
 	private void doCreditInterest() {
 		// TODO Auto-generated method stub
-		bank.creditInterst();
+		bank.creditInterestRate();
 	}
 
 	private void doOpenAccount() {
@@ -265,10 +262,5 @@ public class ATM {
 					printMessage(ex.getMessage()+":"+ex.getAccountNumber());
 				} 
 			}
-		
 	}
-	
-
-
 }
-

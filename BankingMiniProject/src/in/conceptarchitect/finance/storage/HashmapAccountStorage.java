@@ -2,16 +2,16 @@ package in.conceptarchitect.finance.storage;
 
 import java.util.HashMap;
 
-import in.conceptarchitect.finance.BankAccount;
+import in.conceptarchitect.finance.Accounts;
 import in.conceptarchitect.finance.exceptions.InvalidAccountException;
 
 public class HashmapAccountStorage implements AccountStorage {
 	
-	HashMap<Integer,BankAccount> accounts=new HashMap<>();
+	HashMap<Integer,Accounts> accounts=new HashMap<>();
 	int lastId=0;
 	
 	@Override
-	public int addAccount(BankAccount account) {
+	public int addAccount(Accounts account) {
 		// TODO Auto-generated method stub
 		int id=++lastId;
 		account.setAccountNumber(id);
@@ -21,7 +21,7 @@ public class HashmapAccountStorage implements AccountStorage {
 	}
 
 	@Override
-	public BankAccount getAccountByNumber(int accountNumber) {
+	public Accounts getAccountByNumber(int accountNumber) {
 		// TODO Auto-generated method stub
 		if(accounts.containsKey(accountNumber))
 			return accounts.get(accountNumber);
@@ -30,7 +30,7 @@ public class HashmapAccountStorage implements AccountStorage {
 	}
 
 	@Override
-	public void removeAccount(BankAccount account) {
+	public void removeAccount(Accounts account) {
 		// TODO Auto-generated method stub
 		getAccountByNumber(account.getAccountNumber());
 		accounts.remove(account.getAccountNumber());
@@ -44,10 +44,10 @@ public class HashmapAccountStorage implements AccountStorage {
 	}
 
 	@Override
-	public BankAccount[] getAllAccounts() {
+	public Accounts[] getAllAccounts() {
 		// TODO Auto-generated method stub
 		
-		return accounts.values().toArray(new BankAccount[0]);
+		return accounts.values().toArray(new Accounts[0]);
 	}
 
 }
