@@ -15,18 +15,29 @@ public class Bank {
 	double interestRate = 10;
 	
 	ArrayList<Accounts> account = new ArrayList<Accounts> ();
-
-	public Bank(int bankId, String bankName) {
+	BankDB bdb=new BankDB();
+	AccountData ad=new AccountData();
+	MainAccountData madb=new MainAccountData();
+	DatabaseConnection db=new DatabaseConnection();
+	
+	public Bank(int bankId, String bankName) throws Exception {
 		this.bankId = bankId;
 		this.bankName = bankName;
 		lastId = this.bankId;
 		
-		String sqlQuery = "write insert command to bank table";
-		DatabaseConnection.insertQuery(sqlQuery);
+		madb.setBankid(bankId);
+		db.insertAccount(madb);
+		bdb.setBankId(bankId);
+		bdb.setBankName(bankName);
+		db.insertBank(bdb);
+		
+		
+//		String sqlQuery = "write insert command to bank table";
+//		DatabaseConnection.insertQuery(sqlQuery);
 		
 	}
 	
-	public int openAccount(String name, String accountType, String password, double balance) {
+	public int openAccount(String name, String accountType, String password, double balance) throws Exception {
 		Accounts a = null;
 		
 		switch(accountType.toLowerCase()) {
@@ -43,6 +54,9 @@ public class Bank {
 			throw new InvalidAccountTypeException(accountType.toUpperCase());
 		}
 		
+		madb.setAccountNumber(lastId);
+		db.insertAccount(madb);
+		ad.setAccountNumber(lastId);
 		account.add(a);
 		return lastId;
 	}
@@ -67,14 +81,14 @@ public class Bank {
 		accountNumber = getIndex(accountNumber);
 		Accounts a = findAccountByNumber(accountNumber);
 		a.deposit(amount);
-		Transactions t = new Transactions();
-		t.setAmount(amount);
-		t.setMode("Deposited");
-		t.setDescription();
-		a.transaction.add(t);
+//		Transactions t = new Transactions();
+//		t.setAmount(amount);
+//		t.setMode("Deposited");
+////		t.setDescription("");
+//		a.transaction.add(t);
 		
-		String sqlQuery = "write insert command transaction table as deposited";
-		DatabaseConnection.updateQuery(sqlQuery);
+//		String sqlQuery = "write insert command transaction table as deposited";
+//		DatabaseConnection.updateQuery(sqlQuery);
 		
 		account.set(accountNumber, a);
 	}
@@ -83,14 +97,14 @@ public class Bank {
 		accountNumber = getIndex(accountNumber);
 		Accounts a = findAccountByNumber(accountNumber);
 		a.withdraw(amount, password);
-		Transactions t = new Transactions();
-		t.setAmount(amount);
-		t.setMode("Withdraw");
-		t.setDescription();
-		a.transaction.add(t);
+//		Transactions t = new Transactions();
+//		t.setAmount(amount);
+//		t.setMode("Withdraw");
+//		t.setDescription();
+//		a.transaction.add(t);
 		
-		String sqlQuery = "write insert command transaction table as withdrawan";
-		DatabaseConnection.updateQuery(sqlQuery);
+//		String sqlQuery = "write insert command transaction table as withdrawan";
+//		DatabaseConnection.updateQuery(sqlQuery);
 		
 		account.set(accountNumber, a);
 	}
@@ -110,21 +124,21 @@ public class Bank {
 		t.setMode("Received");
 		destination.transaction.add(t);
 		
-		String sqlQuery = "write insert command transaction table as received from";
-		DatabaseConnection.updateQuery(sqlQuery);
+//		String sqlQuery = "write insert command transaction table as received from";
+//		DatabaseConnection.updateQuery(sqlQuery);
 		
 		account.set(accountCount, destination);
 		
-		source.withdraw(amount, password);
-		Transactions s = new Transactions();
-		s.setAccountNumber(dest);
-		s.setMode("Transferred");
-		s.setAmount(amount);
-		s.setDescription();
-		source.transaction.add(s);
-		
-		sqlQuery = "write insert command transaction table as transferred to";
-		DatabaseConnection.updateQuery(sqlQuery);
+//		source.withdraw(amount, password);
+//		Transactions s = new Transactions();
+//		s.setAccountNumber(dest);
+//		s.setMode("Transferred");
+//		s.setAmount(amount);
+//		s.setDescription();
+//		source.transaction.add(s);
+//		
+//		sqlQuery = "write insert command transaction table as transferred to";
+//		DatabaseConnection.updateQuery(sqlQuery);
 		
 		account.set(accountCount, source);
 		
@@ -135,8 +149,8 @@ public class Bank {
 		findAccountByNumber(accountNumber);
 		verify(changed, retype);
 		
-		String sqlQuery = "";
-		DatabaseConnection.insertQuery(sqlQuery);
+//		String sqlQuery = "";
+//		DatabaseConnection.insertQuery(sqlQuery);
 		
 		account.get(accountNumber).changePassword(old, changed);
 	}

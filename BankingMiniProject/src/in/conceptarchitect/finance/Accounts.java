@@ -2,7 +2,6 @@ package in.conceptarchitect.finance;
 
 import java.util.ArrayList;
 
-import in.conceptarchitect.Database.DatabaseConnection;
 import in.conceptarchitect.exceptions.InsufficientBalanceException;
 import in.conceptarchitect.exceptions.InvalidCredentialsException;
 import in.conceptarchitect.exceptions.InvalidDenominationException;
@@ -22,8 +21,7 @@ public abstract class Accounts {
 		this.accountNumber = accountNumber;
 		this.balance = balance;
 		
-		String sqlQuery = "write insert command to accounts table";
-		DatabaseConnection.insertQuery(sqlQuery);
+
 	}
 	
 	public double getBalance() {

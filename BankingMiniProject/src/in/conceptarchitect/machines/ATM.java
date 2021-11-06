@@ -3,14 +3,20 @@ package in.conceptarchitect.machines;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+
+import in.conceptarchitect.Database.DatabaseConnection;
+import in.conceptarchitect.exceptions.BankingExceptions;
+import in.conceptarchitect.exceptions.InsufficientBalanceException;
+import in.conceptarchitect.exceptions.InvalidAccountException;
+import in.conceptarchitect.exceptions.InvalidCredentialsException;
+import in.conceptarchitect.exceptions.InvalidDenominationException;
+import in.conceptarchitect.finance.AccountData;
 import in.conceptarchitect.finance.Bank;
+import in.conceptarchitect.finance.MainAccountData;
 import in.conceptarchitect.finance.Savings;
 import in.conceptarchitect.finance.Transactions;
-import in.conceptarchitect.finance.exceptions.BankingException;
-import in.conceptarchitect.finance.exceptions.InsufficientBalanceException;
-import in.conceptarchitect.finance.exceptions.InvalidAccountException;
-import in.conceptarchitect.finance.exceptions.InvalidCredentialsException;
-import in.conceptarchitect.finance.exceptions.InvalidDenominationException;
+
+
 
 public class ATM {
 	
@@ -18,11 +24,18 @@ public class ATM {
 	private int accountNumber;
 	Bank bank;
 	
+	DatabaseConnection db=new DatabaseConnection();
 	Transactions t=new Transactions();
+	AccountData ad=new AccountData();
+	MainAccountData madb=new MainAccountData();
 	
 	public ATM(Bank bank) {
 		super();
 		this.bank = bank;
+	}
+
+	public ATM() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public void start() throws Exception {
@@ -67,7 +80,7 @@ public class ATM {
 					
 					printMessage("Insufficient Balance in account:"+ex.getAccountNumber()+"\tDeficit:"+ex.getDeficit());
 					
-				} catch(BankingException ex) {
+				} catch(BankingExceptions ex) {
 					
 					printMessage("Error with Account:"+ex.getAccountNumber()+" : "+ex.getMessage());
 					
@@ -92,15 +105,14 @@ public class ATM {
 		int amount=keyboard.readInt("amount to transfer? ");
 		String password=keyboard.readString("password? ");
 		t.setMode("withdraw");	
-		
+		String description=keyboard.readString("description? ");		
 		bank.withdraw(accountNumber, amount, password);
 		t.setAmount(amount);
 		t.setAccountNumber(accountNumber);
-		
-		/*Date date=keyboard.readDate("enter date");
+		t.setDescription(description);
+		Date date=keyboard.readDate("enter date");
 		t.setDate(date);
-		db.insertTransactions(t);*/
-		
+		db.insertTransactions(t);
 		
 		//you reach here only if withdraw succeeds
 		dispenseCash(amount);
@@ -140,9 +152,9 @@ public class ATM {
 		t.setAccountNumber(accountNumber);
 		t.setDescription("transfered succesfully to");
 		t.setAmount(amount);
-		/*Date date=keyboard.readDate("enter date");
+		Date date=keyboard.readDate("enter date");
 		t.setDate(date);
-		db.insertTransactions(t);*/
+		db.insertTransactions(t);
 		printSlip("Amount Transferred");
 	}
 
@@ -151,19 +163,21 @@ public class ATM {
 
 		int amount=keyboard.readInt("amount to transfer? ");
 		t.setMode("Deposit");
+		String description=keyboard.readString("description? ");
 		bank.deposite(accountNumber, amount);
 		t.setAccountNumber(accountNumber);
 		t.setAmount(amount);
-		/*Date date=keyboard.readDate("enter date");
+		Date date=keyboard.readDate("enter date");
 		t.setDate(date);
-		db.insertTransactions(t);*/
+		t.setDescription(description);
+		db.insertTransactions(t);
 		printSlip("Amount Deposited");
 		
 	}
 		
 		
 		
-	private void adminMenu() {
+	private void adminMenu() throws Exception {
 		// TODO Auto-generated method stub
 		while(true) {
 			try {
@@ -180,7 +194,7 @@ public class ATM {
 				return;
 			}
 			} 
-			catch(BankingException ex) {
+			catch(BankingExceptions ex) {
 				printMessage("error with account "+ex.getAccountNumber()+":"+ex.getMessage());
 			}
 		}
@@ -197,15 +211,22 @@ public class ATM {
 		bank.creditInterestRate();
 	}
 
-	private void doOpenAccount() {
+	private void doOpenAccount() throws Exception {
 		// TODO Auto-generated method stub
 		String accountType=keyboard.readString("account type [savings/current/od] ?");
 		String name=keyboard.readString("Name? ");
 		String password=keyboard.readString("Password:");
 		int amount=keyboard.readInt("Amount?");
-		
+		madb.setAccountType(accountType);
+		ad.setAccountType(accountType);
+		ad.setHolderName(name);
+		ad.setPassword(password);
+		ad.setBalance(amount);
+		db.insertAccount(madb);
 		int accountNumber=bank.openAccount(accountType,name, password, amount);
 		printSlip("Your new account number is "+accountNumber);
+		ad.setAccountNumber(accountNumber);
+		db.insertSavings(ad);
 	}
 
 		
