@@ -1,7 +1,6 @@
 package in.conceptarchitect.machines;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 import in.conceptarchitect.Database.DatabaseConnection;
@@ -10,10 +9,7 @@ import in.conceptarchitect.exceptions.InsufficientBalanceException;
 import in.conceptarchitect.exceptions.InvalidAccountException;
 import in.conceptarchitect.exceptions.InvalidCredentialsException;
 import in.conceptarchitect.exceptions.InvalidDenominationException;
-import in.conceptarchitect.finance.AccountData;
 import in.conceptarchitect.finance.Bank;
-import in.conceptarchitect.finance.MainAccountData;
-import in.conceptarchitect.finance.Savings;
 import in.conceptarchitect.finance.Transactions;
 
 
@@ -26,8 +22,7 @@ public class ATM {
 	
 	DatabaseConnection db=new DatabaseConnection();
 	Transactions t=new Transactions();
-	AccountData ad=new AccountData();
-	MainAccountData madb=new MainAccountData();
+
 	
 	public ATM(Bank bank) {
 		super();
@@ -49,12 +44,12 @@ public class ATM {
 					adminMenu();
 			}
 			else
-				mainMenu();	
+				mainMenu(accountNumber);	
 		}
 		
 	}
 
-	private void mainMenu() throws Exception {
+	private void mainMenu(int accountNumber) throws Exception {
 		// TODO Auto-generated method stub
 		
 			while(true) {
@@ -69,9 +64,9 @@ public class ATM {
 						doTransfer(); break;
 					case 4:
 						doShowBalance(); break;
-					/*case 5:
-						doneTransactions(); break;
-					*/case 6:
+					case 5:
+						doneTransactions(accountNumber); break;
+					case 6:
 						doCloseAccount(); return;
 					case 0:
 						return;
@@ -89,15 +84,15 @@ public class ATM {
 		
 	}
 	
-	/*private void doneTransactions() throws Exception {
-		// TODO Auto-generated method stub
-		//List<Transactions> lu=db.getAllTransactions();
-		//for(Transactions t1:lu) {
+	private void doneTransactions(int accountNumber) throws Exception {
+//		 TODO Auto-generated method stub
+		List<Transactions> lu=db.getAllTransactions(accountNumber);
+		for(Transactions t1:lu) {
 			System.out.println(t1);
 	
-		//}
+		}
 		
-	}*/
+	}
 
 	private void doWithdraw() throws Exception {
 		// TODO Auto-generated method stub
@@ -148,11 +143,11 @@ public class ATM {
 		String password=keyboard.readString("password? ");
 		int targetAccount=keyboard.readInt("target account?");
 		t.setMode("transfer");
-		bank.transferTo(accountNumber, amount, password, targetAccount);
+		Date date=keyboard.readDate("enter date");
+		bank.transferTo(accountNumber, amount, password, targetAccount,date);
 		t.setAccountNumber(accountNumber);
 		t.setDescription("transfered succesfully to");
 		t.setAmount(amount);
-		Date date=keyboard.readDate("enter date");
 		t.setDate(date);
 		db.insertTransactions(t);
 		printSlip("Amount Transferred");
@@ -217,17 +212,12 @@ public class ATM {
 		String name=keyboard.readString("Name? ");
 		String password=keyboard.readString("Password:");
 		int amount=keyboard.readInt("Amount?");
-		madb.setAccountType(accountType);
-		ad.setAccountType(accountType);
-		ad.setHolderName(name);
-		ad.setPassword(password);
-		ad.setBalance(amount);
-		db.insertAccount(madb);
-		int accountNumber=bank.openAccount(accountType,name, password, amount);
+		int accountNumber=bank.openAccount(name,accountType, password, amount);
 		printSlip("Your new account number is "+accountNumber);
-		ad.setAccountNumber(accountNumber);
-		db.insertSavings(ad);
+		
 	}
+	
+	
 
 		
 		

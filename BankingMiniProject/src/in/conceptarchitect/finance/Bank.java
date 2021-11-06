@@ -1,5 +1,6 @@
 package in.conceptarchitect.finance;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import in.conceptarchitect.Database.DatabaseConnection;
@@ -15,9 +16,7 @@ public class Bank {
 	double interestRate = 10;
 	
 	ArrayList<Accounts> account = new ArrayList<Accounts> ();
-	BankDB bdb=new BankDB();
-	AccountData ad=new AccountData();
-	MainAccountData madb=new MainAccountData();
+
 	DatabaseConnection db=new DatabaseConnection();
 	
 	public Bank(int bankId, String bankName) throws Exception {
@@ -25,15 +24,10 @@ public class Bank {
 		this.bankName = bankName;
 		lastId = this.bankId;
 		
-		madb.setBankid(bankId);
-		db.insertAccount(madb);
-		bdb.setBankId(bankId);
-		bdb.setBankName(bankName);
-		db.insertBank(bdb);
+
 		
-		
-//		String sqlQuery = "write insert command to bank table";
-//		DatabaseConnection.insertQuery(sqlQuery);
+		String sqlQuery = "insert into Bank values (" + this.bankId + ",'" + this.bankName + "',0," + this.lastId + ");";;
+		DatabaseConnection.insertQuery(sqlQuery);
 		
 	}
 	
@@ -42,21 +36,19 @@ public class Bank {
 		
 		switch(accountType.toLowerCase()) {
 		case "savings": 
-			a = new Savings(name, password, ++ this.lastId, balance);
+			a = new Savings(name, password, ++ this.lastId, balance,accountType,this.bankId);
 			break;
 		case "current":
-			a = new Current(name, password, ++ this.lastId, balance);
+			a = new Current(name, password, ++ this.lastId, balance,accountType,this.bankId);
 			break;
 		case "overdraft":
-			a = new Overdraft(name,password, ++this.lastId, balance);
+			a = new Overdraft(name,password, ++this.lastId, balance,accountType,this.bankId);
 			break;
 		default:
 			throw new InvalidAccountTypeException(accountType.toUpperCase());
 		}
 		
-		madb.setAccountNumber(lastId);
-		db.insertAccount(madb);
-		ad.setAccountNumber(lastId);
+		
 		account.add(a);
 		return lastId;
 	}
@@ -109,7 +101,7 @@ public class Bank {
 		account.set(accountNumber, a);
 	}
 	
-	public void transferTo(int src, double amount, String password, int dest) {
+	public void transferTo(int src, double amount, String password, int dest,Date date) throws Exception {
 		
 		src = getIndex(src);
 		dest = getIndex(dest);
@@ -121,24 +113,16 @@ public class Bank {
 		Transactions t = new Transactions();
 		t.setAccountNumber(src);
 		t.setAmount(amount);
-		t.setMode("Received");
-		destination.transaction.add(t);
+		t.setMode("Transaction");
+		t.setDescription("recived by");
+		t.setDate(date);
+		db.insertTransactions(t);
 		
-//		String sqlQuery = "write insert command transaction table as received from";
-//		DatabaseConnection.updateQuery(sqlQuery);
-		
+
 		account.set(accountCount, destination);
 		
-//		source.withdraw(amount, password);
-//		Transactions s = new Transactions();
-//		s.setAccountNumber(dest);
-//		s.setMode("Transferred");
-//		s.setAmount(amount);
-//		s.setDescription();
-//		source.transaction.add(s);
-//		
-//		sqlQuery = "write insert command transaction table as transferred to";
-//		DatabaseConnection.updateQuery(sqlQuery);
+		source.withdraw(amount, password);
+
 		
 		account.set(accountCount, source);
 		

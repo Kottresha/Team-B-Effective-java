@@ -1,15 +1,16 @@
 package in.conceptarchitect.finance;
 
-
+import in.conceptarchitect.Database.DatabaseConnection;
 
 public class Overdraft extends Accounts {
 
 	double odLimit;
 	
-	public Overdraft(String name, String password, int accountNumber, double balance) {
-		super(name, password, accountNumber, balance);
+	public Overdraft(String name, String password, int accountNumber, double balance,String accountType,int bankId) throws Exception {
+		super(name, password, accountNumber, balance,accountType,bankId);
 		updateOdLimit();
-		
+		String sqlQuery = "insert into odt values ("+this.accountNumber+",'"+this.name+"',"+this.password+","+this.balance+",10);";
+		DatabaseConnection.insertQuery(sqlQuery);		
 
 	}
 	

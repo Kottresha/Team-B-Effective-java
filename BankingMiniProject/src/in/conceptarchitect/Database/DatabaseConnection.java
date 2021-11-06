@@ -4,13 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.conceptarchitect.finance.AccountData;
-import in.conceptarchitect.finance.BankDB;
-import in.conceptarchitect.finance.MainAccountData;
+
 import in.conceptarchitect.finance.Transactions;
 
 public class DatabaseConnection {
@@ -28,53 +27,15 @@ public class DatabaseConnection {
 		return b;
 	}
 	
-	public boolean insertBank(BankDB db)throws Exception{
-		
-		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/project","Banking","Banking");
-		
-		Statement stmt=c.createStatement();
-		
-		boolean b=stmt.execute("insert into Bank values('"+db.getBankId()+"','"+db.getBankName()+"')");
-		
-		c.close();
-		
-		return b;
-	}
-
-	public boolean insertSavings(AccountData ad)throws Exception{
-		
-		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/project","Banking","Banking");
-		
-		Statement stmt=c.createStatement();
-		
-		boolean b=stmt.execute("insert into Savings values('"+ad.getAccountNumber()+"','"+ad.getHolderName()+"','"+ad.getAccountType()+"','"+ad.getPassword()+"','"+ad.getBalance()+"')");
-		
-		c.close();
-		
-		return b;
-	}
-
-	public boolean insertAccount(MainAccountData madb)throws Exception{
-
-		
-		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/project","Banking","Banking");
-		
-		Statement stmt=c.createStatement();
-		
-		boolean b=stmt.execute("insert into Accounts values('"+madb.getAccountNumber()+"','"+madb.getAccountType()+"','"+madb.getBankid()+"')");
-		
-		c.close();
-		
-		return b;
-	}
+	
 
 
-public List<Transactions> getAllTransactions() throws Exception {
+public List<Transactions> getAllTransactions(int accountnumber) throws Exception {
 List<Transactions> li=new ArrayList<Transactions>();
 	
 	Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/project","Banking","Banking");
 
-	PreparedStatement ps=c.prepareStatement("select * from transactions");
+	PreparedStatement ps=c.prepareStatement("select * from transactions where accountNumber="+accountnumber+";");
 	
 	ResultSet rs=ps.executeQuery();
 	
@@ -85,5 +46,16 @@ List<Transactions> li=new ArrayList<Transactions>();
 	c.close();
 
 	return li;
+}
+
+public static void insertQuery(String sqlQuery) throws SQLException {
+	// TODO Auto-generated method stub
+	Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/project","Banking","Banking");
+	
+	Statement stmt=c.createStatement();
+	
+	stmt.executeUpdate(sqlQuery);
+	
+	
 }
 }

@@ -1,7 +1,9 @@
 package in.conceptarchitect.finance;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import in.conceptarchitect.Database.DatabaseConnection;
 import in.conceptarchitect.exceptions.InsufficientBalanceException;
 import in.conceptarchitect.exceptions.InvalidCredentialsException;
 import in.conceptarchitect.exceptions.InvalidDenominationException;
@@ -15,11 +17,15 @@ public abstract class Accounts {
 	
 	ArrayList<Transactions> transaction = new ArrayList<Transactions>();
 	
-	public Accounts(String name, String password, int accountNumber, double balance) {
+	public Accounts(String name, String password, int accountNumber, double balance, String accountType,int bankId) throws SQLException {
 		this.name = name;
 		this.setPassword(password);
 		this.accountNumber = accountNumber;
 		this.balance = balance;
+		
+		String sqlQuery = "insert into Accounts values ("+this.accountNumber+",'"+accountType+"',"+bankId+");";
+		DatabaseConnection.insertQuery(sqlQuery);
+
 		
 
 	}

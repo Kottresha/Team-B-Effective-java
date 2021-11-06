@@ -3,16 +3,14 @@ package in.conceptarchitect.finance;
 import in.conceptarchitect.Database.DatabaseConnection;
 
 public class Savings extends Accounts{
-	
-	AccountData ad=new AccountData();
+
 	DatabaseConnection db=new DatabaseConnection();
 	
-	public Savings(String name, String password, int accountNumber, double balance) throws Exception {
-		super(name, password, accountNumber, balance);
-		ad.setHolderName(name);
-		ad.setPassword(password);
-		ad.setBalance(balance);
-		db.insertSavings(ad);		
+	public Savings(String name, String password, int accountNumber, double balance,String accountType,int bankId) throws Exception {
+		super(name, password, accountNumber, balance, accountType, bankId);
+		
+		String sqlQuery = "insert into Savings values ("+this.accountNumber+",'"+this.name+"',"+this.password+","+this.balance+",10);";
+		DatabaseConnection.insertQuery(sqlQuery);		
 
 	}
 
