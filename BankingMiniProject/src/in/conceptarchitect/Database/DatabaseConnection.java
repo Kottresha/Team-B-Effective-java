@@ -13,22 +13,6 @@ import java.util.List;
 import in.conceptarchitect.finance.Transactions;
 
 public class DatabaseConnection {
-	
-	public boolean insertTransactions(Transactions t)throws Exception{
-		
-		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/project","Banking","Banking");
-		
-		Statement stmt=c.createStatement();
-		
-		boolean b=stmt.execute("insert into Transactions values('"+t.getMode()+"','"+t.getDescription()+"','"+t.getAccountNumber()+"','"+t.getAmount()+"','"+t.getDate()+"')");
-		
-		c.close();
-		
-		return b;
-	}
-	
-	
-
 
 public List<Transactions> getAllTransactions(int accountnumber) throws Exception {
 List<Transactions> li=new ArrayList<Transactions>();
@@ -58,4 +42,89 @@ public static void insertQuery(String sqlQuery) throws SQLException {
 	
 	
 }
+
+
+	
+	public boolean insertTransactions(Transactions t,AccountData ad)throws Exception{
+		
+		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/Banking", "root", "root");
+		
+		Statement stmt=c.createStatement();
+
+		
+		boolean b=stmt.execute("insert into Transactions values("+t.getAccountNumber()+",'"+ad.getAccountType()+"',"+t.getAmount()+",'"+t.getDate()+"')");
+		
+		c.close();
+		
+		return b;
+	}
+	
+	public boolean insertBank(BankDB db)throws Exception{
+		
+		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/Banking","root","root");
+		
+		Statement stmt=c.createStatement();
+		
+		
+		boolean b=stmt.execute("insert into Bank values('"+db.getBankName()+"',"+db.getBankId()+","+db.getBankId()+","+db.getBankId()+")");
+		
+		c.close();
+		
+		return b;
+	}
+
+	public boolean insertSavings(AccountData ad)throws Exception{
+		
+		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/Banking","root","root");
+		
+		Statement stmt=c.createStatement();
+		
+		boolean b=stmt.execute("insert into Savings values("+ad.getAccountNumber()+",'"+ad.getHolderName()+"','"+ad.getAccountType()+"','"+ad.getPassword()+"',"+ad.getBalance()+",default)");
+		
+		c.close();
+		
+		return b;
+	}
+
+	public boolean insertCurrents(AccountData ad)throws Exception{
+		
+		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/Banking","root","root");
+		
+		Statement stmt=c.createStatement();
+		
+		boolean b=stmt.execute("insert into Currents values("+ad.getAccountNumber()+",'"+ad.getHolderName()+"','"+ad.getAccountType()+"','"+ad.getPassword()+"',"+ad.getBalance()+",default)");
+		
+		c.close();
+		
+		return b;
+	}
+	public boolean insertODT(AccountData ad)throws Exception{
+		
+		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/Banking","root","root");
+		
+		Statement stmt=c.createStatement();
+		
+		boolean b=stmt.execute("insert into ODT values("+ad.getAccountNumber()+",'"+ad.getHolderName()+"','"+ad.getAccountType()+"','"+ad.getPassword()+"',"+ad.getBalance()+",default)");
+		
+		c.close();
+		
+		return b;
+	}
+	
+
+	public boolean insertAccount(MainAccountData madb)throws Exception{
+
+		
+		Connection c=DriverManager.getConnection("jdbc:mysql://localhost:3306/Banking","root","root");
+		
+		Statement stmt=c.createStatement();
+		
+		boolean b=stmt.execute("insert into Accounts values("+madb.getAccountNumber()+",'"+madb.getAccountType()+"',"+madb.getBankid()+")");
+		
+		c.close();
+		
+		return b;
+	}
+
+
 }
